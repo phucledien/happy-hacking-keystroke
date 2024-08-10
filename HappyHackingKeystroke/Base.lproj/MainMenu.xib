@@ -16,9 +16,9 @@
         <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
         <menu title="Main Menu" systemMenu="main" id="AYu-sK-qS6">
             <items>
-                <menuItem title="HappyHackingKeystroke" id="1Xt-HY-uBw">
+                <menuItem title="HHKS" id="1Xt-HY-uBw">
                     <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="HappyHackingKeystroke" systemMenu="apple" id="uQy-DD-JDr">
+                    <menu key="submenu" title="HHKS" systemMenu="apple" id="uQy-DD-JDr">
                         <items>
                             <menuItem title="About HappyHackingKeystroke" id="5kV-Vb-QxS">
                                 <modifierMask key="keyEquivalentModifierMask"/>
