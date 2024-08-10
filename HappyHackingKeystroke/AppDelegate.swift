@@ -16,8 +16,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     var logger: Logger!
     var eventTabActionManager: CGEventTapAction!
-    var audioPlayer: AVAudioPlayer!
-    var sound: NSSound?
+    var currentAudioPlayerIndex = 0
+    var audioPlayers: [AVAudioPlayer] = []
+    var lastKeycode: Int64 = -1
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // Insert code here to initialize your application
@@ -38,19 +39,57 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         eventTabActionManager = CGEventTapAction()
         eventTabActionManager.start { [weak self] status in
             self?.logger.info("[TabActionManager] \(status)")
-        } onKeydown: { [weak self] keycode in
+        } onKeyDown: { [weak self] keycode in
             self?.playKeystroke(keycode: keycode)
+        } onKeyUp: { [weak self] keycode in
+            guard let self = self else {return}
+            // If key up -> reset last keycode
+            if (keycode == self.lastKeycode) {
+                self.lastKeycode = -1
+            }
         }
-        sound = NSSound(named: "a")
     }
     
     private func playKeystroke(keycode: Int64) {
+        if lastKeycode == keycode {
+            return
+        }
         playSound(file: "a", ext: "mp3")
+        lastKeycode = keycode
     }
     
     private func playSound(file:String, ext:String) -> Void {
-        sound?.stop()
-        sound?.play()
+        guard let url = Bundle.main.url(forResource: file, withExtension: ext) else {
+            return
+        }
+        
+        
+        // Setup simple ring buffer
+        let maxBuffer = 10
+        self.currentAudioPlayerIndex += 1
+        if (self.currentAudioPlayerIndex >= maxBuffer) {
+            self.currentAudioPlayerIndex = 0;
+        }
+       
+
+        var audioPlayer = audioPlayers.item(at: currentAudioPlayerIndex)
+        if audioPlayer == nil {
+            do {
+                let newAudioPlayer = try AVAudioPlayer(contentsOf: url)
+                audioPlayers.append(newAudioPlayer)
+            } catch {
+                logger.error("Init the audio player failed \(error)")
+            }
+        }
+        
+        guard let audioPlayer = audioPlayer else {
+            // this should never happen
+            return
+        }
+        
+        audioPlayers[currentAudioPlayerIndex] = audioPlayer
+        audioPlayer.prepareToPlay()
+        audioPlayer.play()
     }
 }
 
@@ -68,5 +107,11 @@ extension Logger {
 
     static func custom(category: String) -> Logger {
         return Logger(subsystem: subsystem, category: category)
+    }
+}
+
+extension Array {
+    func item(at index: Int) -> Element? {
+        return indices.contains(index) ? self[index] : nil
     }
 }

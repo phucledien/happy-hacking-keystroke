@@ -17,19 +17,24 @@ final class CGEventTapAction {
     private struct RunState {
         let port: CFMachPort
         let setStatus: (String) -> Void
-        let onKeydown: (Int64) -> Void
+        let onKeyDown: (Int64) -> Void
+        let onKeyUp: (Int64) -> Void
     }
 
     init() {
         self.logger = Logger.eventTapAction
     }
     
-    func start(_ setStatus: @escaping (String) -> Void, onKeydown: @escaping (Int64) -> Void) {
+    func start(
+        _ setStatus: @escaping (String) -> Void,
+        onKeyDown: @escaping (Int64) -> Void,
+        onKeyUp: @escaping (Int64) -> Void
+    ) {
         precondition(self.runState == nil)
         
         logger.debug("will create tap")
         let info = Unmanaged.passRetained(self).toOpaque()
-        let mask = CGEventMask(1 << CGEventType.keyDown.rawValue)
+        let mask = [CGEventType.keyUp, CGEventType.keyDown].reduce(CGEventMask(0), { $0 | (1 << $1.rawValue) })
         guard let port = CGEvent.tapCreate(
             tap: .cgSessionEventTap,
             place: .headInsertEventTap,
@@ -53,7 +58,10 @@ final class CGEventTapAction {
         }
         let rls = CFMachPortCreateRunLoopSource(nil, port, 0)!
         CFRunLoopAddSource(CFRunLoopGetCurrent(), rls, .defaultMode)
-        self.runState = RunState(port: port, setStatus: setStatus, onKeydown: onKeydown)
+        self.runState = RunState(port: port,
+                                 setStatus: setStatus,
+                                 onKeyDown: onKeyDown,
+                                 onKeyUp: onKeyUp)
         logger.debug("did create tap")
     }
     
@@ -62,7 +70,12 @@ final class CGEventTapAction {
         guard let runState = self.runState else { return }
         runState.setStatus("Last event at \(Date()).")
         let keycode = event.getIntegerValueField(.keyboardEventKeycode)
-        runState.onKeydown(keycode)
+        if (event.type == CGEventType.keyUp) {
+            runState.onKeyUp(keycode)
+        }
+        if (event.type == CGEventType.keyDown) {
+            runState.onKeyDown(keycode)
+        }
     }
 
     func stop() {
