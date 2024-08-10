@@ -10,6 +10,9 @@
 		082F455F2C67AF4E00B40F41 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 082F455E2C67AF4E00B40F41 /* AppDelegate.swift */; };
 		082F45612C67AF5000B40F41 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 082F45602C67AF5000B40F41 /* Assets.xcassets */; };
 		082F45642C67AF5000B40F41 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 082F45632C67AF5000B40F41 /* Base */; };
+		082F456C2C67B35E00B40F41 /* CGEventTapAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 082F456B2C67B35E00B40F41 /* CGEventTapAction.swift */; };
+		082F456E2C67BDBF00B40F41 /* KeyMapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 082F456D2C67BDBF00B40F41 /* KeyMapper.swift */; };
+		082F45732C67C25A00B40F41 /* a.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 082F45722C67C14E00B40F41 /* a.mp3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -18,6 +21,9 @@
 		082F45602C67AF5000B40F41 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		082F45632C67AF5000B40F41 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		082F45652C67AF5000B40F41 /* HappyHackingKeystroke.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HappyHackingKeystroke.entitlements; sourceTree = "<group>"; };
+		082F456B2C67B35E00B40F41 /* CGEventTapAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGEventTapAction.swift; sourceTree = "<group>"; };
+		082F456D2C67BDBF00B40F41 /* KeyMapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyMapper.swift; sourceTree = "<group>"; };
+		082F45722C67C14E00B40F41 /* a.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = a.mp3; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,12 +56,23 @@
 		082F455D2C67AF4E00B40F41 /* HappyHackingKeystroke */ = {
 			isa = PBXGroup;
 			children = (
+				082F456F2C67C13200B40F41 /* Sounds */,
+				082F456B2C67B35E00B40F41 /* CGEventTapAction.swift */,
 				082F455E2C67AF4E00B40F41 /* AppDelegate.swift */,
+				082F456D2C67BDBF00B40F41 /* KeyMapper.swift */,
 				082F45602C67AF5000B40F41 /* Assets.xcassets */,
 				082F45622C67AF5000B40F41 /* MainMenu.xib */,
 				082F45652C67AF5000B40F41 /* HappyHackingKeystroke.entitlements */,
 			);
 			path = HappyHackingKeystroke;
+			sourceTree = "<group>";
+		};
+		082F456F2C67C13200B40F41 /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				082F45722C67C14E00B40F41 /* a.mp3 */,
+			);
+			path = Sounds;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -116,6 +133,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				082F45732C67C25A00B40F41 /* a.mp3 in Resources */,
 				082F45612C67AF5000B40F41 /* Assets.xcassets in Resources */,
 				082F45642C67AF5000B40F41 /* Base in Resources */,
 			);
@@ -128,6 +146,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				082F456C2C67B35E00B40F41 /* CGEventTapAction.swift in Sources */,
+				082F456E2C67BDBF00B40F41 /* KeyMapper.swift in Sources */,
 				082F455F2C67AF4E00B40F41 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -198,6 +218,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_LSUIElement = YES;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.5;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
@@ -255,6 +276,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_LSUIElement = YES;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.5;
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -283,6 +305,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.oliverle.HappyHackingKeystroke;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -310,6 +333,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.oliverle.HappyHackingKeystroke;
 				PRODUCT_NAME = "$(TARGET_NAME)";
