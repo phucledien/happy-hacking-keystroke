@@ -58,7 +58,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         lastKeycode = keycode
     }
     
-    private let queue = DispatchQueue(label: "keystroke sound", qos: .userInteractive)
     private func playSound(file:String, ext:String) -> Void {
         guard let url = Bundle.main.url(forResource: file, withExtension: ext) else {
             return
@@ -97,10 +96,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             return
         }
      
-        queue.async {
-            audioPlayer.stop()
-            audioPlayer.play()
-        }
+        audioPlayer.stop()
+        audioPlayer.play()
     }
 }
 
