@@ -34,7 +34,7 @@ final class CGEventTapAction {
         
         logger.debug("will create tap")
         let info = Unmanaged.passRetained(self).toOpaque()
-        let mask = [CGEventType.keyUp, CGEventType.keyDown].reduce(CGEventMask(0), { $0 | (1 << $1.rawValue) })
+        let mask = [CGEventType.keyUp, CGEventType.keyDown, CGEventType.flagsChanged].reduce(CGEventMask(0), { $0 | (1 << $1.rawValue) })
         guard let port = CGEvent.tapCreate(
             tap: .cgSessionEventTap,
             place: .headInsertEventTap,
@@ -64,18 +64,23 @@ final class CGEventTapAction {
                                  onKeyUp: onKeyUp)
         logger.debug("did create tap")
     }
-    
+   
     private func didReceiveEvent(_ event: CGEvent) {
         logger.debug("did receive event")
         guard let runState = self.runState else { return }
-        runState.setStatus("Last event at \(Date()).")
+        
+        var eventName = "keyDown"
         let keycode = event.getIntegerValueField(.keyboardEventKeycode)
         if (event.type == CGEventType.keyUp) {
+            eventName = "keyUp"
             runState.onKeyUp(keycode)
         }
         if (event.type == CGEventType.keyDown) {
+            eventName = "keyDown"
             runState.onKeyDown(keycode)
         }
+       
+        runState.setStatus("Last event \(eventName) at \(Date()).")
     }
 
     func stop() {

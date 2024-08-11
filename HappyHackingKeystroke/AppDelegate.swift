@@ -38,7 +38,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         eventTabActionManager = CGEventTapAction()
         eventTabActionManager.start { [weak self] status in
-            self?.logger.info("[TabActionManager] \(status)")
+            self?.logger.debug("[TabActionManager] \(status)")
         } onKeyDown: { [weak self] keycode in
             self?.playKeystroke(keycode: keycode)
         } onKeyUp: { [weak self] keycode in
@@ -58,11 +58,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         lastKeycode = keycode
     }
     
+    private let queue = DispatchQueue(label: "keystroke sound", qos: .userInteractive)
     private func playSound(file:String, ext:String) -> Void {
         guard let url = Bundle.main.url(forResource: file, withExtension: ext) else {
             return
         }
-        
         
         // Setup simple ring buffer
         let maxBuffer = 10
@@ -70,26 +70,37 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if (self.currentAudioPlayerIndex >= maxBuffer) {
             self.currentAudioPlayerIndex = 0;
         }
+        
        
-
         var audioPlayer = audioPlayers.item(at: currentAudioPlayerIndex)
-        if audioPlayer == nil {
+        
+        if audioPlayer != nil {
+            do {
+                audioPlayers[currentAudioPlayerIndex] = try AVAudioPlayer(contentsOf: url)
+                audioPlayer = audioPlayers.item(at: currentAudioPlayerIndex)
+            } catch {
+                logger.error("Init the audio player failed \(error)")
+            }
+        } else {
             do {
                 let newAudioPlayer = try AVAudioPlayer(contentsOf: url)
                 audioPlayers.append(newAudioPlayer)
+                audioPlayer = newAudioPlayer
             } catch {
                 logger.error("Init the audio player failed \(error)")
             }
         }
         
+        
         guard let audioPlayer = audioPlayer else {
             // this should never happen
             return
         }
-        
-        audioPlayers[currentAudioPlayerIndex] = audioPlayer
-        audioPlayer.prepareToPlay()
-        audioPlayer.play()
+     
+        queue.async {
+            audioPlayer.stop()
+            audioPlayer.play()
+        }
     }
 }
 
